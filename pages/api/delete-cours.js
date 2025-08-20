@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { supabase } from "../../lib/supabase";
@@ -6,26 +5,20 @@ import { supabase } from "../../lib/supabase";
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
 
-function getUserFromCookie(req: NextApiRequest) {
+function getUserFromCookie(req) {
   const cookie = req.headers.cookie;
   if (!cookie) return null;
   const match = cookie.match(/session=([^;]+)/);
   if (!match) return null;
   try {
-    const payload = jwt.verify(match[1], JWT_SECRET) as {
-      id: number;
-      role: string;
-    };
+    const payload = jwt.verify(match[1], JWT_SECRET);
     return payload;
   } catch {
     return null;
   }
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req, res) {
   if (req.method !== "DELETE") return res.status(405).end();
 
   const user = getUserFromCookie(req);
