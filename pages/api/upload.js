@@ -33,7 +33,11 @@ export default async function handler(req, res) {
   if (!user || user.role !== "prof")
     return res.status(401).json({ error: "Non autorisé" });
 
-  const uploadDir = path.join(process.cwd(), "tmp");
+  // Utiliser le dossier temporaire système pour Vercel
+  const uploadDir = process.env.NODE_ENV === 'production' 
+    ? '/tmp' 
+    : path.join(process.cwd(), "tmp");
+    
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }
