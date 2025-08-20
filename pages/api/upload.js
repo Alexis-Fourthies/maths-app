@@ -1,17 +1,15 @@
-import { PrismaClient } from "@prisma/client";
 import { IncomingForm } from "formidable";
 import fs from "fs";
 import path from "path";
 import jwt from "jsonwebtoken";
 import { supabase } from "../../lib/supabase";
+import prisma from "../../lib/prisma";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
 
 function getUserFromCookie(req) {
@@ -34,10 +32,11 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: "Non autorisé" });
 
   // Utiliser le dossier temporaire système pour Vercel
-  const uploadDir = process.env.NODE_ENV === 'production' 
-    ? '/tmp' 
-    : path.join(process.cwd(), "tmp");
-    
+  const uploadDir =
+    process.env.NODE_ENV === "production"
+      ? "/tmp"
+      : path.join(process.cwd(), "tmp");
+
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }

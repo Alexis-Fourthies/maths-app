@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { supabase } from "../../lib/supabase";
-
-const prisma = new PrismaClient();
+import prisma from "../../lib/prisma";
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
 
 function getUserFromCookie(req) {
