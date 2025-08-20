@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  login    String  @unique
+  password String
+  role     Role
+  classe   Classe? // Null pour le prof, défini pour les comptes élèves
+}
+
+model Cours {
+  id        Int      @id @default(autoincrement())
+  titre     String
+  fichier   String   // URL Supabase Storage
+  classe    Classe
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  prof
+  eleve
+}
+
+enum Classe {
+  sixieme
+  cinquieme
+  quatrieme
+  troisieme
+}
